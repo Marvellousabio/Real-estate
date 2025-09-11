@@ -1,0 +1,36 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import Home from './pages/Home';
+import About from './components/About';
+import Property from './components/Property';
+import More from './components/More';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import AddProperty from './pages/addProperty';
+import AllProperites from './pages/AllProperties';
+import PropertyFilterSystem from './pages/PropertyFilterSystem';
+import './App.css'
+
+
+const App = () => {
+  return (
+    <Router>
+      <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/properties" element={<PropertyFilterSystem />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Property />} />
+          <Route path="/more" element={<More />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path='all-properties' element={<AllProperites/>}/>
+          <Route path="/add-property" element={<AddProperty />} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+        </Routes>
+      <Footer />
+    </Router>
+  );
+};
+
+export default App;

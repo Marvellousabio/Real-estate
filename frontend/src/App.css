@@ -1,0 +1,7 @@
+body {
+  cursor: url('/image/icons8-cursor.svg'), auto;
+}
+
+button, a {
+  cursor: url('/image/icons8-pointer-50.svg'), pointer;
+}
