@@ -10,7 +10,7 @@ dotenv.config();
 const app= express();
 app.use(cors({ origin:[
     "http://localhost:5173",
-     "https://real-estate-iul2.vercel.app/" 
+     "https://real-estate-iul2.vercel.app" 
 
     ]
     }));
