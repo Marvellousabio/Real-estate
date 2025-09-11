@@ -90,6 +90,8 @@ export default function AddProperty() {
       const result = await res.json();
       if (result.error) throw new Error(result.error.message);
       urls.push(result.secure_url);
+
+       
       }
       } catch (err) {
     alert(`Image upload failed: ${err.message}`);

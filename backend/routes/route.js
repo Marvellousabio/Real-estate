@@ -29,7 +29,10 @@ router.get("/", async (req, res) => {
 // POST new property
 router.post("/", async (req, res) => {
   try {
-    const newProperty = new property(req.body);
+    const newProperty = new property({
+      ...req.body,
+   images: req.body.images || [], 
+  });
     await newProperty.save();
     res.status(201).json(newProperty);
   } catch (error) {

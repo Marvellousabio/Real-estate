@@ -13,7 +13,7 @@ const propertySchema = new mongoose.Schema({
     bedrooms:Number,
     bathrooms:Number,
     size:Number,
-    imageUrl:String,
+    images:[String],
     createdAt:{type:Date,default:Date.now},
 });
 
