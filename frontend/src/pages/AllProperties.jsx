@@ -58,7 +58,21 @@ export default function PropertyList() {
             >
               {/* Image placeholder */}
               <div className="h-40 bg-gray-200 flex items-center justify-center text-gray-500">
-                📷 No Image
+                
+    {p.images && p.images.length > 0 ? (
+    p.images.map((img, i) => (
+      <img
+        key={i}
+        src={img}
+        alt={`${p.title} ${i + 1}`}
+        className="w-40 h-full object-cover mr-2"
+      />
+    ))
+  ) : (
+    <div className="flex items-center justify-center w-full text-gray-500">
+      📷 No Image
+    </div>
+  )}
               </div>
 
               <div className="p-5">
