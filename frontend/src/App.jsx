@@ -7,7 +7,7 @@ import Property from './components/Property';
 import More from './components/More';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import AddProperty from './pages/addProperty';
+import AddProperty from './pages/AddProperty';
 import AllProperites from './pages/AllProperties';
 import PropertyFilterSystem from './pages/PropertyFilterSystem';
 import './App.css'
