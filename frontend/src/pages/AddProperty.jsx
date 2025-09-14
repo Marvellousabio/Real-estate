@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState } from "react";
 import { createProperty } from "../services/api";
 
 
@@ -28,35 +28,34 @@ export default function AddProperty() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange =(e)=>{
-    const newFiles= Array.from(e.target.files).filter((file)=>{
-     const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+   // Validate file before adding
+  const validateFile = (file) => {
+    const validTypes = ["image/png", "image/jpeg", "image/jpg"];
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (!validTypes.includes(file.type)) {
-      alert('Only PNG and JPG files are allowed.');
+      alert("Only PNG and JPG files are allowed.");
       return false;
     }
     if (file.size > maxSize) {
-      alert('File size exceeds 5MB.');
+      alert("File size exceeds 5MB.");
       return false;
     }
-    return true; 
+    return true;
+  };
+
+  const handleFileChange = (e) => {
+    const newFiles = Array.from(e.target.files).filter(validateFile);
+    setFiles((prevFiles) => {
+      const combined = [...prevFiles, ...newFiles];
+      return combined.slice(0, 5); // max 5
     });
-    setFiles(prevFiles=> {
-      {/* for update later 
-        const filteredNewFiles = newFiles.filter(
-      file => !prevFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)
-    ); 
-        */}
-      const combined= [...prevFiles, ...newFiles];
-      return combined.slice(0,5);
-    }); 
-    
   };
   const handleDrop = (e)=>{
     e.preventDefault();
     setIsDragging(false);
-    const droppedFiles= Array.from(e.dataTransfer.files).slice(0,5);
+    const droppedFiles= Array.from(e.dataTransfer.files)
+    .filter(validateFile)
+    .slice(0,5);
      setFiles(prevFiles => {
       {/* for update later 
         const filteredNewFiles = newFiles.filter(
@@ -102,11 +101,7 @@ export default function AddProperty() {
       return urls;
     };
 
-    useEffect(() => {
-  return () => {
-    files.forEach((file) => URL.revokeObjectURL(file));
-  };
-}, [files]);
+    
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -174,7 +169,7 @@ export default function AddProperty() {
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2  focus:ring-green-600"
           />
         </div>
-
+      <div className="grid grid-cols-2 gap-4">
         {/* Price */}
         <div>
           <label className="block text-gray-700 mb-2">Price</label>
@@ -187,6 +182,21 @@ export default function AddProperty() {
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2  focus:ring-green-600"
           />
         </div>
+        {/* Category */}
+          <div>
+            <label className="block text-gray-700 mb-2">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+            >
+              <option value="">Select category</option>
+              <option value="sell">Sell</option>
+              <option value="rent">Rent</option>
+            </select>
+          </div>
+          </div>
 
         {/* Bedrooms & Bathrooms */}
         <div className="grid grid-cols-2 gap-4">

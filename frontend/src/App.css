@@ -5,3 +5,12 @@ body {
 button, a {
   cursor: url('/image/icons8-pointer-50.svg'), pointer;
 }
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 5s infinite;
+}
+

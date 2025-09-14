@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FaNairaSign from "../icons/FaNairaSign";
 
 function PropertyCard({ p }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,7 +60,7 @@ function PropertyCard({ p }) {
         </h3>
         <p className="text-gray-600 mb-2">{p.location}</p>
         <p className="text-green-700 font-bold mb-4">
-          ${p.price.toLocaleString()}
+          <FaNairaSign  style={{fontWeight:'bold', opacity: 0.9}} />{p.price.toLocaleString()}
         </p>
 
         <div className="grid grid-cols-3 gap-2 text-sm text-gray-600">

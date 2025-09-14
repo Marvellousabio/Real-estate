@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import Im1 from '../assets/im1.jpg';
 import Im2 from '../assets/im2.jpg';
 import Im3 from '../assets/im3.jpg';
@@ -33,7 +34,7 @@ const Property = () => {
             Discover Your Perfect <span className='text-[var(--accent)]'>Property Match</span>
           </h3>
           <p className='text-[var(--text-dark)] max-w-2xl mx-auto text-lg opacity-80'>
-            Find your ideal home with our extensive network of real estate agents in San Francisco, CA 94123, and beyond.
+            Find your ideal home with our extensive network of real estate agents home close to you.
           </p>
         </motion.div>
 
@@ -74,14 +75,16 @@ const Property = () => {
         </div>
 
         <div className='text-center mt-12'>
+          <Link to="/all-properties">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            href='/contact'
             className='bg-[var(--accent)] text-#DCC9B6 px-8 py-3 rounded-full hover:bg-[var(--accent)] transition-colors duration-300 shadow-md'
           >
             View All Properties
           </motion.button>
+          </Link>
+          
         </div>
       </div>
     </section>
