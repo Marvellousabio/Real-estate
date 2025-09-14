@@ -46,17 +46,17 @@ export default function PropertyList() {
         </Link>
       </div>
 
-      {properties.length === 0 ? (
-        <p className="text-center text-gray-600">
-          No properties found. Please add one!
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((p) => (
-            <PropertyCard key={p._id} p={p} />
-          ))}
-        </div>
-      )}
+      {Array.isArray(properties) && properties.length > 0 ? (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {properties.map((p) => (
+      <PropertyCard key={p._id || p.id} p={p} />
+    ))}
+  </div>
+) : (
+  <p className="text-center text-gray-600">
+    No properties found. Please add one!
+  </p>
+)}
     </div>
   );
 }
