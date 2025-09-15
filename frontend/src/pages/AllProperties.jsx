@@ -11,7 +11,7 @@ export default function PropertyList() {
     const fetchData = async () => {
       try {
         const res = await getProperties();
-        setProperties(res.data);
+        setProperties(res);
       } catch (err) {
         console.error("Error fetching properties:", err);
       } finally {
