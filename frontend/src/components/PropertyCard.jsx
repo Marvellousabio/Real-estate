@@ -9,7 +9,7 @@ function PropertyCard({ p }) {
   const hasImages = Array.isArray(p.images) && p.images.length > 0;
   const images = hasImages
     ? p.images
-    : [""];
+    : [{NoImage}];
 
   const nextImage = () => {
     setCurrentIndex((prev) =>
