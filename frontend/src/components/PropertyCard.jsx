@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FaNairaSign from "../icons/FaNairaSign";
+import NoImage from "../icons/no-image.png";
 
 function PropertyCard({ p }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -8,7 +9,7 @@ function PropertyCard({ p }) {
   const hasImages = Array.isArray(p.images) && p.images.length > 0;
   const images = hasImages
     ? p.images
-    : ["https://www.bing.com/ck/a?!&&p=d031972276c532ef4f34fc2d1b7972629f56d5dfa6c5c75158380b88fd6999a1JmltdHM9MTc1NzgwODAwMA&ptn=3&ver=2&hsh=4&fclid=0fabc7a7-a9c8-611c-262e-d1a4a8416074&u=a1L2ltYWdlcy9zZWFyY2g_cT1ubyUyYmltYWdlJmlkPUUwNUU2QzU4MjZGMkE1REE3MEJGQUFFODIyMzFBM0VCNzhCOTI0QzYmRk9STT1JUUZSQkE"];
+    : [""];
 
   const nextImage = () => {
     setCurrentIndex((prev) =>
