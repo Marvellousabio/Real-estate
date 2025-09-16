@@ -6,7 +6,7 @@ import { fadeIn } from '../utils/animate';
 
 const Footer = () => {
   return (
-    <footer className="bg-[var(--primary)] text-[var(--light-gray)] w-full py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[var(--primary)] text-[var(--light-gray)] w-full py-12 px-4 sm:px-6 lg:px-8 position-bottom mb-0">
       <motion.div
         variants={fadeIn('left', 0.1)}
         initial='hidden'

@@ -47,23 +47,29 @@ export default function AddProperty() {
     const newFiles = Array.from(e.target.files).filter(validateFile);
     setFiles((prevFiles) => {
       const combined = [...prevFiles, ...newFiles];
-      return combined.slice(0, 5); // max 5
+      const unique = combined.filter(
+        (f, i, arr) =>
+          arr.findIndex(
+            (ff) => ff.name === f.name && ff.lastModified === f.lastModified
+          ) === i
+      );
+      return unique.slice(0, 5); // max 5
     });
   };
   const handleDrop = (e)=>{
     e.preventDefault();
     setIsDragging(false);
-    const droppedFiles= Array.from(e.dataTransfer.files)
-    .filter(validateFile)
-    .slice(0,5);
+    const droppedFiles= Array.from(e.dataTransfer.files).filter(validateFile)
      setFiles(prevFiles => {
-      {/* for update later 
-        const filteredNewFiles = newFiles.filter(
-      file => !prevFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)
-    ); 
-        */}
+      
     const combined = [...prevFiles, ...droppedFiles];
-    return combined.slice(0, 5); // limit total to 5 files
+    const unique = combined.filter(
+        (f, i, arr) =>
+          arr.findIndex(
+            (ff) => ff.name === f.name && ff.lastModified === f.lastModified
+          ) === i
+      );
+    return unique.slice(0, 5); // limit total to 5 files
   });
   };
 
@@ -72,10 +78,13 @@ export default function AddProperty() {
   const handleDragLeave = () => setIsDragging(false);
 
   const uploadImages=async()=>{
+    if (files.length === 0) {
+      alert("Please upload at least one image.");
+      return [];
+    }
     setUploading(true);
-    const urls=[];
     try {
-      for(let file of files){
+      const uploads=files.map(async(file)=>{
         const data = new FormData();
         data.append("file", file);
         data.append("upload_preset", UPLOAD_PRESET);
@@ -88,18 +97,17 @@ export default function AddProperty() {
         if (!res.ok) throw new Error(`Upload failed for ${file.name}`);
       const result = await res.json();
       if (result.error) throw new Error(result.error.message);
-      urls.push(result.secure_url);
-
-       
-      }
+      return result.sequre_url; 
+      });
+      const urls= await Promise.all(uploads);
+      setUploading(false);
+      return urls;
       } catch (err) {
     alert(`Image upload failed: ${err.message}`);
     setUploading(false);
     return [];
   }
-      setUploading(false);
-      return urls;
-    };
+  };
 
     
 
@@ -107,6 +115,7 @@ export default function AddProperty() {
     e.preventDefault();
     try {
       const imageUrls = await uploadImages();
+      if (imageUrls.length === 0) return;
       const payload = {
       ...formData,
       price: Number(formData.price),
@@ -115,10 +124,14 @@ export default function AddProperty() {
       size: Number(formData.size),
       images: imageUrls,
     };
-
+      
       const res = await createProperty(payload);
-      alert("✅ Property added successfully!");
-      console.log(res.data);
+      if (res?.data) {
+        alert("✅ Property added successfully!");
+        console.log(res.data);
+      } else {
+        throw new Error("Unexpected response from server");
+      }
 
       setFormData({
         title: "",
@@ -135,6 +148,7 @@ export default function AddProperty() {
       setFiles([]);
     } catch (err) {
       console.error(err.response?.data || err.message);
+       alert("❌ Failed to add property. Please try again.");
     }
   };
 
@@ -186,6 +200,7 @@ export default function AddProperty() {
           <div>
             <label className="block text-gray-700 mb-2">Category</label>
             <select
+            id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
@@ -197,6 +212,8 @@ export default function AddProperty() {
             </select>
           </div>
           </div>
+
+          
 
         {/* Bedrooms & Bathrooms */}
         <div className="grid grid-cols-2 gap-4">
@@ -225,7 +242,24 @@ export default function AddProperty() {
           </div>
         </div>
 
-        {/* Size */}
+        
+          <div className="grid grid-cols-2 gap-4">
+          <div>
+          <label className="block text-gray-700 mb-2">Type</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+          >
+            <option value="">Select type</option>
+            <option value="apartment">Apartment</option>
+            <option value="duplex">Duplex</option>
+            <option value="bungalow">Bungalow</option>
+            <option value="land">Land</option>
+          </select>
+        </div>
+          {/* Size */}
         <div>
           <label className="block text-gray-700 mb-2">Size (sqft)</label>
           <input
@@ -236,6 +270,7 @@ export default function AddProperty() {
             placeholder="Enter size in sqft"
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
           />
+        </div>
         </div>
 
         {/* Description */}

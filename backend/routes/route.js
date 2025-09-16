@@ -23,7 +23,6 @@ router.get("/", async (req, res) => {
     let query = {};
 
     // Category mapping
-    if (category === "buy") query.status = "for-sale";
     if (category === "rent") query.status = "for-rent";
     if (category === "sell") query.status = "for-sale";
 
@@ -82,8 +81,10 @@ router.get("/", async (req, res) => {
       default:
         sort.createdAt = -1; // newest first
     }
-
-    const properties = await Property.find(query).sort(sort);
+    const{page=1,limit=10}=req.query;
+    const properties = await Property.find(query).sort(sort)
+    .skip((page-1)*limit)
+    .limit(Number(limit));
     res.json(properties);
   } catch (err) {
     console.error(err);

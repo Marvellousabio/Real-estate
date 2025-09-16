@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import FaNairaSign from "../icons/FaNairaSign";
 import NoImage from "../icons/no-image.png";
 
-function PropertyCard({ p }) {
+const PropertyCard= React.forwardRef(({ p },ref)=> {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Defensive fallback for images
   const hasImages = Array.isArray(p.images) && p.images.length > 0;
   const images = hasImages
     ? p.images
-    : [{NoImage}];
+    : [NoImage];
 
   const nextImage = () => {
     setCurrentIndex((prev) =>
@@ -24,13 +24,14 @@ function PropertyCard({ p }) {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl overflow-hidden border hover:shadow-xl transition">
+    <div ref={ref} className="bg-white shadow-lg rounded-xl overflow-hidden border hover:shadow-xl transition">
       {/* Image Section */}
       <div className="relative h-40 bg-gray-200">
         <img
           src={images[currentIndex]}
           alt={`${p.title} ${currentIndex + 1}`}
           className="w-full h-full object-cover"
+          loading="lazy"
         />
 
         {/* Carousel Controls */}
@@ -74,6 +75,6 @@ function PropertyCard({ p }) {
       </div>
     </div>
   );
-}
+});
 
 export default PropertyCard;

@@ -101,10 +101,10 @@ const PropertyFilterSystem = () => {
     }).format(price);
 
   if (loading)
-    return <p className="text-center mt-20">Loading Properties....</p>;
+    return <p className="text-center mt-20 min-h-screen">Loading Properties....</p>;
 
   return (
-    <div className="max-w-7xl mx-auto p-4 mt-20">
+    <div className=" min-h-screen max-w-7xl mx-auto p-4 mt-20">
       {/* Quick Search */}
       <QuickSearch
         searchQuery={searchQuery}

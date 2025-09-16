@@ -41,7 +41,7 @@ const PropertySearch = () => {
         {/* Tabs */}
         <div className="relative flex space-x-8 border-b pb-3 mb-6 justify-between ">
          <div className="gap-4 space-3"> 
-          {["buy", "rent", "sell"].map((tab) => (
+          {["buy", "rent", "agent"].map((tab) => (
             <div key={tab} className="relative space-4 pr-2 inline-block">
             <button
               key={tab}
@@ -55,7 +55,7 @@ const PropertySearch = () => {
               {tab}
             </button>
             {/* Blinking dot under Sell only */}
-      {tab === "sell" && (
+      {tab === "agent" && (
         <div className="inline-block w-1.5 h-1.5  bg-green-600 rounded-full ml-1 animate-blink align-bottom"></div>
       )}
       </div>
@@ -200,7 +200,7 @@ const PropertySearch = () => {
           </div>
         )}
 
-        {activeTab === "sell" && (
+        {activeTab === "agent" && (
           
           <div className="grid md:grid-cols-3 gap-4">
             {/* Property Type */}

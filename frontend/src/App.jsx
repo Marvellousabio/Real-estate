@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/add-property" element={<AddProperty />} />
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
-      <Footer />
+      <Footer className="bottom-0 fixed mb-0" />
     </Router>
   );
 };
