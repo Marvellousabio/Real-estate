@@ -31,10 +31,11 @@ const PropertyFilterSystem = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [sortBy, setSortBy] = useState("price-low");
-useEffect(() => {
+
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-    }, 1000); // Wait 500ms after user stops typing
+    }, 5000); 
 
     return () => {
       clearTimeout(handler); // Clear timeout if user types again
@@ -55,7 +56,11 @@ useEffect(() => {
       minSize: params.get("minSize") || "",
       maxSize: params.get("maxSize") || "",
     }));
-    setSearchQuery(params.get("search") || "");
+    const searchParam = params.get("search");
+    if (searchParam !== null) {
+      setSearchQuery(searchParam);
+      setDebouncedSearch(searchParam);
+    }
     setSortBy(params.get("sortBy") || "price-low");
   }, [locationHook.search]);
 
@@ -180,14 +185,15 @@ useEffect(() => {
             No properties found matching your criteria.
           </div>
         )}
-        {alert && (
+        
+      </div>
+      {alert.message && (
           <CustomAlert
              message={alert.message}
           type={alert.type}
           onClose={() => setAlert({ message: "", type: "" })}
           />
         )}
-      </div>
     </div>
   );
 };

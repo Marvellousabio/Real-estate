@@ -2,7 +2,6 @@ import React, { useEffect, useState,useRef, useCallback } from "react";
 import { getProperties } from "../services/api";
 import PropertyCard from "../components/PropertyCard"
 import { Link } from "react-router-dom"; // import Link
-import CustomAlert from "../components/CustomAlert";
 
 
 const PropertySkeleton = () => (
@@ -16,7 +15,7 @@ export default function PropertyList() {
   const [hasMore, setHasMore] = useState(true);
   const [observerSupported, setObserverSupported] = useState(true);
   const limit = 10;
-  const [alert, setAlert] = useState(null);
+ 
 
     const observer = useRef();
 
@@ -107,13 +106,7 @@ export default function PropertyList() {
     )}
 
    
-{alert && (
-  <CustomAlert
-    message={alert.message}
-          type={alert.type}
-          onClose={() => setAlert({ message: "", type: "" })}
-  />
-)}
+
 
       {!loading && hasMore && !observerSupported &&(
         <div className="text-center mt-6">
@@ -131,6 +124,7 @@ export default function PropertyList() {
            You’ve reached the end!
         </div>
       )}
+      
     </div>
   );
 }
