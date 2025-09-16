@@ -2,10 +2,13 @@ import React, { useEffect, useState,useRef, useCallback } from "react";
 import { getProperties } from "../services/api";
 import PropertyCard from "../components/PropertyCard"
 import { Link } from "react-router-dom"; // import Link
+import CustomAlert from "../components/CustomAlert";
+
 
 const PropertySkeleton = () => (
   <div className="bg-gray-200 animate-pulse rounded-xl h-64 w-full shadow-md"></div>
 );
+
 export default function PropertyList() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +16,7 @@ export default function PropertyList() {
   const [hasMore, setHasMore] = useState(true);
   const [observerSupported, setObserverSupported] = useState(true);
   const limit = 10;
+  const [alert, setAlert] = useState(null);
 
     const observer = useRef();
 
@@ -101,6 +105,15 @@ export default function PropertyList() {
         <PropertySkeleton key={`skeleton-${idx}`} />
       ))
     )}
+
+   
+{alert && (
+  <CustomAlert
+    message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ message: "", type: "" })}
+  />
+)}
 
       {!loading && hasMore && !observerSupported &&(
         <div className="text-center mt-6">

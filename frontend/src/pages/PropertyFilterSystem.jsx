@@ -2,14 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProperties } from "../services/api";
 import QuickSearch from "../components/QuickSearch";
+import CustomAlert from "../components/CustomAlert";
 
 const PropertyFilterSystem = () => {
   const locationHook = useLocation();
   const navigate = useNavigate();
-
+  
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [alert, setAlert] = useState({ message: "", type: "" });
+
+  const showAlert = (message, type = "info") => {
+    setAlert({ message, type });
+    setTimeout(() => setAlert({ message: "", type: "" }), 5000); // auto close after 5s
+  };
   const [filters, setFilters] = useState({
     category: "buy",
     propertyType: "",
@@ -85,12 +92,13 @@ useEffect(() => {
         setProperties(data);
       } catch (err) {
         console.error("Cannot fetch properties:", err);
-        alert(`Cannot fetch properties: ${err}`);
+        showAlert(`Cannot fetch properties: ${err}`,"error");
       } finally {
         setLoading(false);
       }
     };
     fetchProperties();
+  
   }, [filters,debouncedSearch, sortBy]);
 
   const formatPrice = (price) =>
@@ -171,6 +179,13 @@ useEffect(() => {
           <div className="text-center py-12 text-gray-500">
             No properties found matching your criteria.
           </div>
+        )}
+        {alert && (
+          <CustomAlert
+             message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ message: "", type: "" })}
+          />
         )}
       </div>
     </div>

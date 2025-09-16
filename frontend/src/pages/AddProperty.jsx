@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { createProperty } from "../services/api";
-
+import CustomAlert from "../components/CustomAlert";
 
 
 export default function AddProperty() {
+  const [alert, setAlert] = useState({ message: "", type: "" });
+
+  const showAlert = (message, type = "info") => {
+    setAlert({ message, type });
+    setTimeout(() => setAlert({ message: "", type: "" }), 5000); // auto close after 5s
+  };
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -33,11 +39,11 @@ export default function AddProperty() {
     const validTypes = ["image/png", "image/jpeg", "image/jpg"];
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (!validTypes.includes(file.type)) {
-      alert("Only PNG and JPG files are allowed.");
+      showAlert("Only PNG and JPG files are allowed.", "error");
       return false;
     }
     if (file.size > maxSize) {
-      alert("File size exceeds 5MB.");
+      showAlert("File size exceeds 5MB.", "error");
       return false;
     }
     return true;
@@ -79,7 +85,7 @@ export default function AddProperty() {
 
   const uploadImages=async()=>{
     if (files.length === 0) {
-      alert("Please upload at least one image.");
+      showAlert("Please upload at least one image.","error");
       return [];
     }
     setUploading(true);
@@ -97,13 +103,13 @@ export default function AddProperty() {
         if (!res.ok) throw new Error(`Upload failed for ${file.name}`);
       const result = await res.json();
       if (result.error) throw new Error(result.error.message);
-      return result.sequre_url; 
+      return result.secure_url; 
       });
       const urls= await Promise.all(uploads);
       setUploading(false);
       return urls;
       } catch (err) {
-    alert(`Image upload failed: ${err.message}`);
+    showAlert(`Image upload failed: ${err.message}`,"error");
     setUploading(false);
     return [];
   }
@@ -127,7 +133,7 @@ export default function AddProperty() {
       
       const res = await createProperty(payload);
       if (res?.data) {
-        alert("✅ Property added successfully!");
+        showAlert("✅ Property added successfully!","success");
         console.log(res.data);
       } else {
         throw new Error("Unexpected response from server");
@@ -148,7 +154,7 @@ export default function AddProperty() {
       setFiles([]);
     } catch (err) {
       console.error(err.response?.data || err.message);
-       alert("❌ Failed to add property. Please try again.");
+       showAlert("❌ Failed to add property. Please try again.","error");
     }
   };
 
@@ -346,7 +352,7 @@ export default function AddProperty() {
     </div>
   )}
 </div>
-
+        
 
         {/* Submit Button */}
         <button
@@ -357,6 +363,13 @@ export default function AddProperty() {
           {uploading ? "Uploading..." : "Add Property"}
         </button>
       </form>
+      {alert.message && (
+          <CustomAlert
+           message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ message: "", type: "" })}
+          />
+        )}
     </div>
   );
 }
