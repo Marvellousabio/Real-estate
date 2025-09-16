@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
 import route from './routes/route.js';
+import blogRouter from './routes/blogRouter.js';
 
 
 dotenv.config();
@@ -25,3 +26,4 @@ app.use("/api/properties",route);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   
+app.use("/api/blog",blogRouter);
