@@ -11,6 +11,7 @@ import AddProperty from './pages/AddProperty';
 import AllProperites from './pages/AllProperties';
 import PropertyFilterSystem from './pages/PropertyFilterSystem';
 import BlogDetails from './pages/BlogDetails';
+import  CreateBlog from './pages/CreateBlog';
 import './App.css'
 
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Property />} />
           <Route path="/more" element={<More />} />
+          <Route path="/create-blog" element={<CreateBlog />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/contact" element={<Contact />} />
           <Route path='all-properties' element={<AllProperites/>}/>

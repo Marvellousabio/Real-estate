@@ -27,7 +27,7 @@ blogRouter.get("/:id", async (req, res) => {
 });
 
 // Add new blog (Admin use)
-blogRouter.post("/blogs", upload.single("image"), async (req, res) => {
+blogRouter.post("/", upload.single("image"), async (req, res) => {
   try {
     const newBlog = new Blog({
       title: req.body.title,

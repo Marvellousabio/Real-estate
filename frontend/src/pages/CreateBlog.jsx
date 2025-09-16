@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Upload } from "lucide-react";
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
@@ -21,7 +22,8 @@ const CreateBlog = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Blog created:", res.data);
-      // Reset after submit
+
+      // Reset
       setTitle("");
       setExcerpt("");
       setContent("");
@@ -33,7 +35,7 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    <div className="min-h-screen mt-10 bg-gray-50 flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-8 space-y-6"
@@ -86,31 +88,43 @@ const CreateBlog = () => {
           />
         </div>
 
-        {/* Image Upload */}
+        {/* Blog Image Upload (styled like property upload) */}
         <div>
           <label className="block text-gray-700 font-medium mb-2">
             Blog Cover Image
           </label>
+
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 transition"
+            onClick={() => document.getElementById("blogImageInput").click()}
+          >
+            {preview ? (
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-full h-64 object-cover rounded-lg"
+              />
+            ) : (
+              <>
+                <Upload className="w-12 h-12 text-gray-400 mb-3" />
+                <p className="text-gray-600">Click to upload cover image</p>
+                <p className="text-sm text-gray-400">(JPEG, PNG, etc.)</p>
+              </>
+            )}
+          </div>
+
           <input
             type="file"
+            id="blogImageInput"
             accept="image/*"
+            className="hidden"
             onChange={(e) => {
               const file = e.target.files[0];
               setImage(file);
               setPreview(URL.createObjectURL(file));
             }}
-            className="w-full text-gray-600"
             required
           />
-          {preview && (
-            <div className="mt-4">
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-full h-64 object-cover rounded-lg border"
-              />
-            </div>
-          )}
         </div>
 
         {/* Submit Button */}
