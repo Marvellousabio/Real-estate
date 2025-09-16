@@ -1,6 +1,6 @@
 // routes/blogRoutes.js
 import express from "express";
-import Blog from "../models/Blog.js";
+import Blog from "../model/blog.js";
 import { upload } from "../config/storage.js";
 
 const blogRouter = express.Router();
