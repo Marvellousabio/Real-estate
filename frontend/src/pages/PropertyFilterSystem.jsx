@@ -10,7 +10,6 @@ const PropertyFilterSystem = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters and search
   const [filters, setFilters] = useState({
     category: "buy",
     propertyType: "",
@@ -23,15 +22,24 @@ const PropertyFilterSystem = () => {
     maxSize: "",
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [sortBy, setSortBy] = useState("price-low");
+useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 1000); // Wait 500ms after user stops typing
 
-  // Load filters and search query from URL
+    return () => {
+      clearTimeout(handler); // Clear timeout if user types again
+    };
+  }, [searchQuery]);
+  // Load filters from URL
   useEffect(() => {
     const params = new URLSearchParams(locationHook.search);
-
     setFilters((prev) => ({
       ...prev,
       category: params.get("category") || prev.category,
+      propertyType: params.get("propertyType") || prev.propertyType,
       location: params.get("location") || "",
       minPrice: params.get("minPrice") || "",
       maxPrice: params.get("maxPrice") || "",
@@ -40,34 +48,28 @@ const PropertyFilterSystem = () => {
       minSize: params.get("minSize") || "",
       maxSize: params.get("maxSize") || "",
     }));
-
     setSearchQuery(params.get("search") || "");
     setSortBy(params.get("sortBy") || "price-low");
   }, [locationHook.search]);
 
-  // Update URL whenever filters, searchQuery, or sortBy changes
+  // Update URL on filters/search/sort change
   useEffect(() => {
     const params = new URLSearchParams();
-    if (filters.category) params.set("category", filters.category);
-    if (filters.location) params.set("location", filters.location);
-    if (filters.minPrice) params.set("minPrice", filters.minPrice);
-    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
-    if (filters.bedrooms) params.set("bedrooms", filters.bedrooms);
-    if (filters.bathrooms) params.set("bathrooms", filters.bathrooms);
-    if (filters.minSize) params.set("minSize", filters.minSize);
-    if (filters.maxSize) params.set("maxSize", filters.maxSize);
-    if (searchQuery) params.set("search", searchQuery);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+    });
+    if (debouncedSearch) params.set("search", debouncedSearch);
     if (sortBy) params.set("sortBy", sortBy);
-
     navigate(`/properties?${params.toString()}`, { replace: true });
-  }, [filters, searchQuery, sortBy, navigate]);
+  }, [filters,debouncedSearch, sortBy, navigate]);
 
-  // Fetch properties from backend
+  // Fetch filtered properties
   useEffect(() => {
     const fetchProperties = async () => {
       setLoading(true);
       try {
         const data = await getProperties({
+         
           category: filters.category,
           propertyType: filters.propertyType,
           location: filters.location,
@@ -77,22 +79,20 @@ const PropertyFilterSystem = () => {
           bathrooms: filters.bathrooms,
           minSize: filters.minSize,
           maxSize: filters.maxSize,
-          search: searchQuery,
-          sortBy: sortBy,
+          search: debouncedSearch, // Use debounced search here
+          sortBy,
         });
-
-        setProperties(data); // already filtered & sorted by backend
+        setProperties(data);
       } catch (err) {
+        console.error("Cannot fetch properties:", err);
         alert(`Cannot fetch properties: ${err}`);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProperties();
-  }, [filters, searchQuery, sortBy]);
+  }, [filters,debouncedSearch, sortBy]);
 
-  // Format price
   const formatPrice = (price) =>
     new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -101,18 +101,19 @@ const PropertyFilterSystem = () => {
     }).format(price);
 
   if (loading)
-    return <p className="text-center mt-20 min-h-screen">Loading Properties....</p>;
+    return (
+      <p className="text-center mt-20 min-h-screen">Loading Properties....</p>
+    );
 
   return (
-    <div className=" min-h-screen max-w-7xl mx-auto p-4 mt-20">
-      {/* Quick Search */}
+    <div className="min-h-screen max-w-7xl mx-auto p-4 mt-20">
       <QuickSearch
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         filters={filters}
+        setFilters={setFilters}
       />
 
-      {/* Property Results */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {properties.length > 0 ? (
           properties.map((property) => (
