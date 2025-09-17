@@ -8,6 +8,7 @@ const CreateBlog = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [uploading,setUploading]=useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,8 +30,10 @@ const CreateBlog = () => {
       setContent("");
       setImage(null);
       setPreview(null);
+        setUploading(false);
     } catch (err) {
       console.error("Error creating blog:", err);
+      setUploading(false);
     }
   };
 
@@ -130,9 +133,10 @@ const CreateBlog = () => {
         {/* Submit Button */}
         <button
           type="submit"
+          disabled = {uploading}
           className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          🚀 Publish Blog
+        >{uploading ? "Uploading..." : "🚀 Publish Blog"}
+          
         </button>
       </form>
     </div>
